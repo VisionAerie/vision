@@ -63,8 +63,9 @@ PrivateVarDef bool NetworkUpdateIsAdministrative = false;
  *****  Session GC State  *****
  ******************************/
 
-PrivateVarDef bool GarbageCollectionRunning = false;
-PrivateVarDef bool NetworkGarbageCollectedInSession = false;
+M_AND::GenIndex_t M_AND::g_xGCGeneration = 0;
+bool M_AND::g_bGarbageCollectionRunning = false;
+bool M_AND::g_bNetworkGarbageCollectedInSession = false;
 
 bool M_DCTE::g_bPotentialSessionGarbage = false;
 
@@ -345,6 +346,9 @@ public:
     }
     bool holdsAContainerAddress () const {
 	return m_pDCTE->holdsAContainerAddress ();
+    }
+    bool holdsAContainerHandle () const {
+	return m_pDCTE->holdsAContainerHandle ();
     }
     bool holdsACPCC () const {
 	return m_pDCTE->holdsACPCC ();
@@ -1312,7 +1316,7 @@ PS_UpdateStatus M_AND::UpdateNetwork (bool globalUpdate) {
 
     if (globalUpdate)
 	m_pPhysicalAND->UpdateNetwork (this);
-    else if (NetworkGarbageCollectedInSession)
+    else if (NetworkGarbageCollectedInSession ())
 	m_pPhysicalAND->SetUpdateStatusTo (PS_UpdateStatus_NotSeparable);
     else
 	m_pASDRing->persistentASD ()->UpdateSpace ();
@@ -1401,8 +1405,6 @@ VContainerHandle::VContainerHandle (M_ASD *pContainerSpace, RTYPE_Type xContaine
 , m_pRTD		(M_RTDPtr (xContainerType))
 , m_bReadWrite		(true)
 , m_bPrecious		(false)
-, m_iHandleRefCount	(0)
-, m_bVisited		(false)
 {
     pContainerSpace->CreateContainer (xContainerType, sContainer, this); 
     M_RTD_HandleCreateCount (m_pRTD)++;
@@ -1415,8 +1417,6 @@ VContainerHandle::VContainerHandle (M_ASD *pContainerSpace, RTYPE_Type xContaine
 , m_pRTD		(M_RTDPtr (xContainerType))
 , m_bReadWrite		(false)
 , m_bPrecious		(false)
-, m_iHandleRefCount	(0)
-, m_bVisited		(false)
 {
     M_RTD_HandleCreateCount (m_pRTD)++;
 }
@@ -1429,8 +1429,6 @@ VContainerHandle::VContainerHandle (M_CTE &rCTE)
 , m_pRTD		(M_RTDPtr (M_CPreamble_RType (m_pContainer)))
 , m_bReadWrite		(rCTE.addressType () == M_CTEAddressType_RWContainer)
 , m_bPrecious		(false)
-, m_iHandleRefCount	(0)
-, m_bVisited		(false)
 {
     M_RTD_HandleCreateCount (m_pRTD)++;
 }
@@ -2289,7 +2287,7 @@ bool M_ASD::FlushCachedResources (VArgList const&) {
 
 void M_AND::FlushCachedResources () {
 //  Don't do anything that could change the set of accessed containers if a GC is running, ...
-    if (GarbageCollectionRunning)
+    if (GarbageCollectionRunning ())
 	return;
 
     bool InitialHandlePreservationFlag = VContainerHandle::g_bPreservingHandles;
@@ -3817,15 +3815,12 @@ bool M_ASD::EnqueueOmittingCycles (VArgList const &rArgList) {
     unsigned int xUB = cteCount () - 1;
     for (unsigned int cti = 0; cti <= xUB; cti++) {
 	M_CTE cte (this, cti);
-        if (!cte.gcVisited()) {
-	    switch (cte.addressType ()) {
-	    case M_CTEAddressType_CPCC:
-		VContainerHandle *pHandle = cte.addressAsContainerHandle ();
-
-		// check out the handle's status after cycle detection and reset
-		cte.foundAllReferences(pHandle->cdReferenceCount() == pHandle->referenceCount());
-		pHandle->unmark();
-
+	switch (cte.addressType ()) {
+	case M_CTEAddressType_CPCC:
+	    VContainerHandle *pHandle = cte.addressAsContainerHandle ();
+	    // record the handle's status after cycle detection...
+	    cte.foundAllReferences(pHandle->foundAllReferences());
+	    if (!cte.gcVisited()) {
 		if (cte.referenceCount() == 0 && pHandle->isReferenced()) {
 		    if (cte.foundAllReferences()) {
 			pHandle->generateLogRecord ("Omit");
@@ -4071,7 +4066,7 @@ bool M_ASD::SweepUp (VArgList const &rArgList) {
 		 *  are referenced.
 		 *************************************************************/
 		    VContainerHandle *pHandle = cte.addressAsContainerHandle ();
-		    if (pHandle->isReferenced () && !cte.foundAllReferences()) {
+		    if (cte.gcVisited () || pHandle->isReferenced() && !cte.foundAllReferences()) {
 			bOkToReclaim = false;
 			pHandle->generateLogRecord ("Preserve");
 		    } else {
@@ -4092,27 +4087,25 @@ bool M_ASD::SweepUp (VArgList const &rArgList) {
 	    }
 
 	    if (bOkToReclaim) {
-                #if defined(DEBUG_SESSION_GC)
-                    fprintf(stderr, "  reclaiming [%d: %d] new: %d type: %d "
-                        "refHandle: %d refcount: %d\n", 
-                        Index(), ctIndex, cte.isNew(), cte.addressType(), 
-                        ( cte.addressType() == M_CTEAddressType_CPCC &&
-                          cte.addressAsContainerHandle()->isReferenced()
-                        ), 
-                        cte.referenceCount()
-                    );
-                #endif
+#if defined(DEBUG_SESSION_GC)
+		fprintf(stderr, "  reclaiming [%d: %d] new: %d type: %d "
+			"refHandle: %d refcount: %d\n", 
+			Index(), ctIndex, cte.isNew(), cte.addressType(), 
+			cte.holdsACPCC() && cte.addressAsContainerHandle()->isReferenced(), 
+			cte.referenceCount()
+		);
+#endif
 
 
-	    if (pAddress) {
+		if (pAddress) {
 		    DeallocateContainer (pAddress);
 		    bReclaimedContainers = true;
-		if (cte.isntNew ())
+		    if (cte.isntNew ())
 			bReclaimedPersistentContainers = true;
-	    }
+		}
 		cte.DeallocateCTE ();
+	    }
 	}
-    }
     }
 
     // cleanup CTE flags
@@ -4241,38 +4234,6 @@ void M_ASD::GCVisitMark::Mark_(M_ASD* pASD, M_POP const *pPOP) {
     );
   }
 }
-
-void M_ASD::GCVisitCycleDetect::Mark_(M_ASD* pASD, M_POP const *pPOP) {
-    M_CTE cte (pASD->Database(), pPOP);
-
-    if (cte.gcVisited())
-	return; /* Might be in a cycle, but won't be removed */
-
-    bool isAReturnVisit = cte.cdVisited();
-
-    if (!isAReturnVisit) {
-	switch (cte.addressType()) {
-	case M_CTEAddressType_ForwardingPOP:
-	    Mark (cte.space(), &cte.addressAsPOP ());
-	    break;
-	case M_CTEAddressType_CPCC:
-#if defined(DEBUG_GC_CYCLE_DETECTION)
-	    fprintf(stderr, "  examining [%d: %d]: refcount: %d type: %s\n", 
-		cte.space(), cte.containerIndex(), 
-                cte.addressAsContainerHandle()->referenceCount(),
-                cte.addressAsContainerHandle()->RTypeName()
-	    );
-#endif
-
-	    cte.addressAsContainerHandle()->startMark();
-	    /* no break */
-	default:
-	    cte.space()->GCQueueInsert (cte.containerIndex());
-	    cte.cdVisited(true);
-	    break;
-	}
-    }
-}
 
 
 /*---------------------------------------------------------------------------
@@ -4280,6 +4241,11 @@ void M_ASD::GCVisitCycleDetect::Mark_(M_ASD* pASD, M_POP const *pPOP) {
  */
 void M_ASD::GCVisitBase::processContainerHandle (M_CTE &rCTE, VContainerHandle *pHandle) {
     processContainerAddress (rCTE, pHandle->containerAddress ());
+}
+
+void M_ASD::GCVisitMark::processContainerHandle (M_CTE &rCTE, VContainerHandle *pHandle) {
+    BaseClass::processContainerHandle (rCTE, pHandle);
+    pHandle->visitReferencesUsing (&VContainerHandle::gcMark);
 }
 
 void M_ASD::GCVisitBase::processContainerAddress (M_CTE &rCTE, M_CPreamble *pAddress) {
@@ -4315,6 +4281,13 @@ void M_ASD::GCVisitBase::processContainerAddress (M_CTE &rCTE, M_CPreamble *pAdd
     }
 }
 
+void M_ASD::GCVisitCycleDetect::processContainerAddress (M_CTE &rCTE, M_CPreamble *pAddress) {
+}
+
+void M_ASD::GCVisitCycleDetect::processContainerHandle (M_CTE &rCTE, VContainerHandle *pHandle) {
+    pHandle->visitReferencesUsing (&VContainerHandle::cdMark);
+}
+
 /*---------------------------------------------------------------------------
  *---------------------------------------------------------------------------
  */
@@ -4345,8 +4318,8 @@ bool M_AND::DisposeOfNetworkGarbage () {
 
     bool result = false;
     UNWIND_Try {
-	NetworkGarbageCollectedInSession =
-	GarbageCollectionRunning	 = true;
+	OnGCStart ();
+	g_bNetworkGarbageCollectedInSession = true;
 
 	GCInvocationCount++;
 	GCRevisitCount = GCFirstVisitCount = 0;
@@ -4364,7 +4337,7 @@ bool M_AND::DisposeOfNetworkGarbage () {
 
 	M_DCTE::g_bPotentialSessionGarbage = false;
     } UNWIND_Finally {
-	GarbageCollectionRunning	= false;
+	OnGCFinish ();
     } UNWIND_EndTryFinally;
 
     return result;
@@ -4529,12 +4502,12 @@ bool VDatabaseFederatorForBatchvision::DisposeOfSessionGarbage (bool bAggressive
     // Don't run if the network garbage collector is running and only
     // bother if garbage could have potentially been created since
     // last disposal ....
-    if (!GarbageCollectionRunning && M_DCTE::g_bPotentialSessionGarbage) {
+    if (!M_AND::GarbageCollectionRunning () && M_DCTE::g_bPotentialSessionGarbage) {
 	if (bAggressive)
 	    FlushCachedResources ();
 
 	UNWIND_Try {
-	    GarbageCollectionRunning = true;
+	    M_AND::OnGCStart ();
 
 	    GCInvocationCount++;
 	    GCRevisitCount = GCFirstVisitCount = 0;
@@ -4556,7 +4529,7 @@ bool VDatabaseFederatorForBatchvision::DisposeOfSessionGarbage (bool bAggressive
 	    }
 
 	} UNWIND_Finally {
-	    GarbageCollectionRunning = false;
+	    M_AND::OnGCFinish ();
 	} UNWIND_EndTryFinally;
     }
     return result;
