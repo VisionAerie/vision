@@ -12,6 +12,8 @@
  *****  Declarations  *****
  **************************/
 
+#include "va_pugixml_document.h"
+
 namespace Vxa {
     class VResultBuilder;
 }
@@ -39,10 +41,12 @@ namespace VA {
 	    ~Root () {
 	    }
 
+	//  Document Creation
+	public:
+
 	//  Methods
 	public:
-//	    void getCalendar	(VResultBuilder &rRB);
-//	    void setCalendar_ 	(VResultBuilder &rRB, VString const & rCalender);
+	    void loadDocument (VResultBuilder &rRB, VString const &rFilename);
 
 	//  State
 	private:

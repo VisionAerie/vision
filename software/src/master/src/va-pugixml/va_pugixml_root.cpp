@@ -53,19 +53,22 @@ VA::PugiXML::Root::Root () {
 }
 
 
+/*******************************
+ *******************************
+ *****  Document Creation  *****
+ *******************************
+ *******************************/
+
+
 /************************************
  ************************************
  *****  Method Implementations  *****
  ************************************
  ************************************/
 
-// void VA::PugiXML::Root::getCalendar (VResultBuilder &rRB) {
-//     m_pFQLFetchObject->getCalendar (rRB);
-// }
-
-// void VA::PugiXML::Root::setCalendar_(VResultBuilder &rRB, VString const &rCalender) {
-//     m_pFQLFetchObject->setCalendar_(rRB, rCalender);
-// }
+void VA::PugiXML::Root::loadDocument (VResultBuilder &rRB, VString const &rFilename) {
+    rRB = new Document (rFilename);
+}
 
 namespace VA {
     namespace PugiXML {
@@ -77,13 +80,8 @@ namespace VA {
 		defineConstant ("whatTypeAmI", "VA::PugiXML::Root");
 		defineConstant ("isErrorObject", false);
 
-		// defineMethod ("getCalendar", &PugiXML::Root::getCalendar);
-		// defineMethod ("setCalendar:", &PugiXML::Root::setCalendar_);
+		defineMethod   ("load:", &Root::loadDocument);
 
-		// defineMethod ("getFetchObject:", &PugiXML::Root::getFetchObject);
-		// defineMethod ("newFetchObject", &PugiXML::Root::newFetchObject);
-
-		// defineMethod ("getFormulaObject:", &PugiXML::Root::getFormulaObject_);
 		defineConstant ("help", (iHelpInfo << m_iHelpInfo));
 	    }
 	} g_iRootClass;
