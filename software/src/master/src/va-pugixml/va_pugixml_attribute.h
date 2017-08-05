@@ -12,6 +12,8 @@
  *****  Declarations  *****
  **************************/
 
+#include "va_pugixml_node.h"
+
 namespace Vxa {
     class VResultBuilder;
 }
@@ -32,20 +34,29 @@ namespace VA {
 
 	//  Construction
 	public:
-	    Attribute ();
+	    Attribute (Node *pNode, pugi::xml_attribute const &rPugiAttribute);
 
 	//  Destruction
 	private:
 	    ~Attribute () {
 	    }
 
+	//  Helpers
+	private:
+	    void returnNonEmpty (Vxa::VResultBuilder &rRB, pugi::xml_attribute const &rPugiAttribute);
+
 	//  Methods
 	public:
-//	    void getCalendar	(VResultBuilder &rRB);
-//	    void setCalendar_ 	(VResultBuilder &rRB, VString const & rCalender);
+	    void getName (Vxa::VResultBuilder &rRB);
+	    void getValue (Vxa::VResultBuilder &rRB);
+
+	    void getNextAttribute (Vxa::VResultBuilder &rRB);
+	    void getPreviousAttribute (Vxa::VResultBuilder &rRB);
 
 	//  State
 	private:
+	    Node::Reference const m_pNode;
+	    pugi::xml_attribute   m_iPugiAttribute;
 	};
     }
 }

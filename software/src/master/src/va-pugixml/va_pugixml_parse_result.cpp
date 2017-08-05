@@ -74,16 +74,6 @@ namespace VA {
 	    ParseResultClass () {
 		VString iHelpInfo ("The class PugiXML::ParseResult supports the following methods:\nhelp\n");
 
-		defineConstant ("whatTypeAmI", "VA::PugiXML::ParseResult");
-		defineConstant ("isErrorObject", false);
-
-		// defineMethod ("getCalendar", &PugiXML::ParseResult::getCalendar);
-		// defineMethod ("setCalendar:", &PugiXML::ParseResult::setCalendar_);
-
-		// defineMethod ("getFetchObject:", &PugiXML::ParseResult::getFetchObject);
-		// defineMethod ("newFetchObject", &PugiXML::ParseResult::newFetchObject);
-
-		// defineMethod ("getFormulaObject:", &PugiXML::ParseResult::getFormulaObject_);
 		defineConstant ("help", (iHelpInfo << m_iHelpInfo));
 	    }
 	} g_iParseResultClass;

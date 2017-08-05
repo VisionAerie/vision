@@ -77,9 +77,6 @@ namespace VA {
 	    RootClass () {
 		VString iHelpInfo ("The class PugiXML::Root supports the following methods:\nhelp\n");
 
-		defineConstant ("whatTypeAmI", "VA::PugiXML::Root");
-		defineConstant ("isErrorObject", false);
-
 		defineMethod   ("load:", &Root::loadDocument);
 
 		defineConstant ("help", (iHelpInfo << m_iHelpInfo));

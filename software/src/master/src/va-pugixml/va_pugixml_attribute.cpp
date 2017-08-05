@@ -49,7 +49,20 @@ DEFINE_CONCRETE_RTTLITE (VA::PugiXML::Attribute);
  **************************
  **************************/
 
-VA::PugiXML::Attribute::Attribute () {
+VA::PugiXML::Attribute::Attribute (
+    Node *pNode, pugi::xml_attribute const &rPugiAttribute
+) : m_pNode (pNode), m_iPugiAttribute (rPugiAttribute) {
+}
+
+/************************************
+ ************************************
+ *****  Helper Implementations  *****
+ ************************************
+ ************************************/
+
+void VA::PugiXML::Attribute::returnNonEmpty (Vxa::VResultBuilder &rRB, pugi::xml_attribute const &rPugiAttribute) {
+    if (!rPugiAttribute.empty ())
+	rRB = new Attribute (m_pNode, rPugiAttribute);
 }
 
 
@@ -59,13 +72,20 @@ VA::PugiXML::Attribute::Attribute () {
  ************************************
  ************************************/
 
-// void VA::PugiXML::Attribute::getCalendar (VResultBuilder &rRB) {
-//     m_pFQLFetchObject->getCalendar (rRB);
-// }
+void VA::PugiXML::Attribute::getName (Vxa::VResultBuilder &rRB) {
+    rRB = m_iPugiAttribute.name ();
+}
 
-// void VA::PugiXML::Attribute::setCalendar_(VResultBuilder &rRB, VString const &rCalender) {
-//     m_pFQLFetchObject->setCalendar_(rRB, rCalender);
-// }
+void VA::PugiXML::Attribute::getValue (Vxa::VResultBuilder &rRB) {
+    rRB = m_iPugiAttribute.value ();
+}
+
+void VA::PugiXML::Attribute::getNextAttribute (Vxa::VResultBuilder &rRB) {
+    returnNonEmpty (rRB, m_iPugiAttribute.next_attribute ());
+}
+void VA::PugiXML::Attribute::getPreviousAttribute (Vxa::VResultBuilder &rRB) {
+    returnNonEmpty (rRB, m_iPugiAttribute.previous_attribute ());
+}
 
 namespace VA {
     namespace PugiXML {
@@ -74,16 +94,12 @@ namespace VA {
 	    AttributeClass () {
 		VString iHelpInfo ("The class PugiXML::Attribute supports the following methods:\nhelp\n");
 
-		defineConstant ("whatTypeAmI", "VA::PugiXML::Attribute");
-		defineConstant ("isErrorObject", false);
+		defineMethod ("getName", &Attribute::getName);
+		defineMethod ("getValue", &Attribute::getValue);
 
-		// defineMethod ("getCalendar", &PugiXML::Attribute::getCalendar);
-		// defineMethod ("setCalendar:", &PugiXML::Attribute::setCalendar_);
+		defineMethod ("nextAttribute", &Attribute::getNextAttribute);
+		defineMethod ("previousAttribute", &Attribute::getPreviousAttribute);
 
-		// defineMethod ("getFetchObject:", &PugiXML::Attribute::getFetchObject);
-		// defineMethod ("newFetchObject", &PugiXML::Attribute::newFetchObject);
-
-		// defineMethod ("getFormulaObject:", &PugiXML::Attribute::getFormulaObject_);
 		defineConstant ("help", (iHelpInfo << m_iHelpInfo));
 	    }
 	} g_iAttributeClass;
