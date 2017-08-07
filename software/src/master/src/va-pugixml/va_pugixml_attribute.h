@@ -50,8 +50,8 @@ namespace VA {
 	    void getName (Vxa::VResultBuilder &rRB);
 	    void getValue (Vxa::VResultBuilder &rRB);
 
-	    void getNextAttribute (Vxa::VResultBuilder &rRB);
-	    void getPreviousAttribute (Vxa::VResultBuilder &rRB);
+	    void getNextSibling (Vxa::VResultBuilder &rRB);
+	    void getPreviousSibling (Vxa::VResultBuilder &rRB);
 
 	//  State
 	private:

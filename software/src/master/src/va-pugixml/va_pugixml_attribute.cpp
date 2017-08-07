@@ -80,10 +80,10 @@ void VA::PugiXML::Attribute::getValue (Vxa::VResultBuilder &rRB) {
     rRB = m_iPugiAttribute.value ();
 }
 
-void VA::PugiXML::Attribute::getNextAttribute (Vxa::VResultBuilder &rRB) {
+void VA::PugiXML::Attribute::getNextSibling (Vxa::VResultBuilder &rRB) {
     returnNonEmpty (rRB, m_iPugiAttribute.next_attribute ());
 }
-void VA::PugiXML::Attribute::getPreviousAttribute (Vxa::VResultBuilder &rRB) {
+void VA::PugiXML::Attribute::getPreviousSibling (Vxa::VResultBuilder &rRB) {
     returnNonEmpty (rRB, m_iPugiAttribute.previous_attribute ());
 }
 
@@ -97,8 +97,8 @@ namespace VA {
 		defineMethod ("getName", &Attribute::getName);
 		defineMethod ("getValue", &Attribute::getValue);
 
-		defineMethod ("nextAttribute", &Attribute::getNextAttribute);
-		defineMethod ("previousAttribute", &Attribute::getPreviousAttribute);
+		defineMethod ("nextSibling", &Attribute::getNextSibling);
+		defineMethod ("previousSibling", &Attribute::getPreviousSibling);
 
 		defineConstant ("help", (iHelpInfo << m_iHelpInfo));
 	    }

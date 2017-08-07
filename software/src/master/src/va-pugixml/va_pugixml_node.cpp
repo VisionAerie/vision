@@ -194,8 +194,8 @@ namespace VA {
 		defineMethod ("attributeCount", &Node::getAttributeCount);
 		defineMethod ("childCount", &Node::getChildCount);
 
-		defineMethod ("name", &Node::getName);
-		defineMethod ("value", &Node::getValue);
+		defineMethod ("getName", &Node::getName);
+		defineMethod ("getValue", &Node::getValue);
 
 		defineMethod ("childValue", &Node::getChildValue);
 		defineMethod ("childValueOf:", &Node::getChildValueOf);
