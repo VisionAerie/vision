@@ -40,7 +40,7 @@
 
 namespace Vxa {
     template <typename T> class VCollectable
-	: public VClass
+	: virtual public VClass
 	, public VExportable<T*>
 	, public VImportable<T*>
     {
@@ -120,7 +120,7 @@ namespace Vxa {
 	}
 
     //  Method Definition
-    public:
+    protected:
 	template <typename Signature> bool defineMethod (VString const &rName, Signature pMember) {
 	    typename VCollectableMethod<Signature>::Reference pMethod (
 		new VCollectableMethod<Signature> (rName, pMember)

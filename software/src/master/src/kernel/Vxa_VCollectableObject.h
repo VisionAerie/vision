@@ -18,6 +18,8 @@
  *************************/
 
 namespace Vxa {
+    class VResultBuilder;
+
     class Vxa_API VCollectableObject : virtual public VRolePlayer {
 	DECLARE_ABSTRACT_RTTLITE (VCollectableObject, VRolePlayer);
 
