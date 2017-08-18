@@ -28,9 +28,9 @@ namespace VA {
 
 	//  Class Builder
 	public:
-	    class ClassBuilder : virtual public Node::ClassBuilder {
+	    class ClassBuilder : public Node::ClassBuilder {
 	    public:
-		ClassBuilder ();
+		ClassBuilder (Vxa::VClass &rClass);
 	    };
 
 	//  Construction

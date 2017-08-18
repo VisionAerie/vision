@@ -66,3 +66,30 @@ bool Vxa::VCollectableObject::attach (VCollectableCollection *pCollection, colle
 bool Vxa::VCollectableObject::detach (VCollectableCollection *pCollection) {
     return m_pCollection.interlockedClearIf (pCollection);
 }
+
+
+/***************************************************
+ ***************************************************
+ *****                                         *****
+ *****  Vxa::VCollectableObject::ClassBuilder  *****
+ *****                                         *****
+ ***************************************************
+ ***************************************************/
+
+/**************************
+ **************************
+ *****  Construction  *****
+ **************************
+ **************************/
+
+Vxa::VCollectableObject::ClassBuilder::ClassBuilder (Vxa::VClass &rClass) : m_rClass (rClass) {
+}
+
+bool Vxa::VCollectableObject::ClassBuilder::defineMethod (VMethod *pMethod) {
+    return m_rClass.defineMethod (pMethod);
+}
+
+bool Vxa::VCollectableObject::ClassBuilder::defineHelp (VString const &rWhere) {
+    return true;
+}
+

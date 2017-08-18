@@ -40,7 +40,7 @@
 namespace Vxa {
     class VCollectableObject;
 
-    template <typename T> class VCollectable : public VExportable<T*>, public VImportable<T*> {
+    template <typename T> class VCollectable : public VClass, public VExportable<T*> , public VImportable<T*> {
 	DECLARE_FAMILY_MEMBERS (VCollectable<T>,VClass);
 
     //  Aliases
@@ -104,14 +104,15 @@ namespace Vxa {
 
     //  Class Materialization
     public:
-	VClass *thisClass () {
-	    return m_pClass;
+	VClass *thisAsClass () {
+	    static typename T::ClassBuilder gs_iClassBuilder (*this);
+	    return this;
 	}
 
     //  Export Creation
     private:
 	virtual bool createExport (export_return_t &rpResult, val_t const &rpInstance) {
-	    (new collection_t (thisClass (), 0, rpInstance))->getRole (rpResult);
+	    (new collection_t (thisAsClass (), 0, rpInstance))->getRole (rpResult);
 	    return rpResult.isntNil ();
 	}
 
@@ -139,13 +140,9 @@ namespace Vxa {
     //  Result Generation
     private:
 	virtual bool returnResult (VResultBuilder *pResultBuilder, val_t const &rpResult) {
-	    Datum const iDatum (thisClass (), rpResult);
+	    Datum const iDatum (thisAsClass (), rpResult);
 	    return pResultBuilder->returnResult (iDatum);
 	}
-
-    //  State
-    private:
-	VClass::Pointer m_pClass;
     };
 }
 

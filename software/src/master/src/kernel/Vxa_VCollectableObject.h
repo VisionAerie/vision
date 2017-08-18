@@ -28,7 +28,12 @@ namespace Vxa {
 
     //  Aliases
     public:
+	typedef ThisClass Object;
 	typedef VCollectableCollection::collection_index_t collection_index_t;
+
+    //  Class Builder
+    public:
+	class Vxa_API ClassBuilder;
 
     //  Construction
     protected:
@@ -65,8 +70,15 @@ namespace Vxa {
 	VCollectableCollection::Pointer m_pCollection;
 	collection_index_t m_xObject;
     };
+    
+/*****************************************************************
+ *****************************************************************/
 
-    class Vxa_API ClassBuilder {
+    class Vxa_API VCollectableObject::ClassBuilder {
+    //  Construction
+    public:
+	ClassBuilder (Vxa::VClass &rClass);
+
     //  Method Definition
     public:
 #ifndef sun
@@ -78,27 +90,25 @@ namespace Vxa {
 	    return defineConstantImpl (rName, rConstant);
 	}
 
-	template <typename Signature> ClassBuilder& defineMethod (VString const &rName, Signature pMember) {
+	template <typename Signature> bool defineMethod (VString const &rName, Signature pMember) {
 	    typename VCollectableMethod<Signature>::Reference pMethod (
 		new VCollectableMethod<Signature> (rName, pMember)
 	    );
 	    return defineMethod (pMethod);
 	}
 
-	ClassBuilder& defineHelp (VString const &rWhere);
+	bool defineHelp (VString const &rWhere);
 
     private:
 	template <typename NameType, typename T> bool defineConstantImpl (NameType &rName, T const &rConstant) {
 	    VMethod::Reference pMethod;
 	    return VExportable<T>::CreateMethod (pMethod, rName, rConstant) && defineMethod (pMethod);
 	}
-	ClassBuilder& defineMethod (VMethod *pMethod) {
-	    return *this;
-	}
+	bool defineMethod (VMethod *pMethod);
 
     //  State
     private:
-	
+	VClass& m_rClass;
     };
 }
 
