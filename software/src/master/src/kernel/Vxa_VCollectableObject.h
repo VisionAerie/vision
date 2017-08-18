@@ -12,6 +12,7 @@
  **************************/
 
 #include "Vxa_VCollectableCollection.h"
+#include "Vxa_VCollectableMethod.h"
 
 /*************************
  *****  Definitions  *****
@@ -63,6 +64,41 @@ namespace Vxa {
     private:
 	VCollectableCollection::Pointer m_pCollection;
 	collection_index_t m_xObject;
+    };
+
+    class Vxa_API ClassBuilder {
+    //  Method Definition
+    public:
+#ifndef sun
+	template <typename NameType, typename T> bool defineConstant (NameType &rName, T rConstant[]) {
+	    return defineConstantImpl (rName, static_cast<T*>(rConstant));
+	}
+#endif
+	template <typename NameType, typename T> bool defineConstant (NameType &rName, T const &rConstant) {
+	    return defineConstantImpl (rName, rConstant);
+	}
+
+	template <typename Signature> ClassBuilder& defineMethod (VString const &rName, Signature pMember) {
+	    typename VCollectableMethod<Signature>::Reference pMethod (
+		new VCollectableMethod<Signature> (rName, pMember)
+	    );
+	    return defineMethod (pMethod);
+	}
+
+	ClassBuilder& defineHelp (VString const &rWhere);
+
+    private:
+	template <typename NameType, typename T> bool defineConstantImpl (NameType &rName, T const &rConstant) {
+	    VMethod::Reference pMethod;
+	    return VExportable<T>::CreateMethod (pMethod, rName, rConstant) && defineMethod (pMethod);
+	}
+	ClassBuilder& defineMethod (VMethod *pMethod) {
+	    return *this;
+	}
+
+    //  State
+    private:
+	
     };
 }
 

@@ -28,9 +28,12 @@ namespace VA {
 	class Attribute : public Vxa::VCollectableObject {
 	    DECLARE_CONCRETE_RTTLITE (Attribute, Vxa::VCollectableObject);
 
-	//  Aliases
+	//  Class Builder
 	public:
-	    typedef Vxa::VResultBuilder VResultBuilder;
+	    class ClassBuilder : virtual public Vxa::ClassBuilder {
+	    public:
+		ClassBuilder ();
+	    };
 
 	//  Construction
 	public:

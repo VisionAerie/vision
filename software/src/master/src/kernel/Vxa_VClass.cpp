@@ -96,9 +96,12 @@ bool Vxa::VClass::defineMethod (VMethod *pMethod) {
 }
 
 bool Vxa::VClass::defineHelp (char const *pWhere) {
+    /*
     VString iHelpInfo;
     iHelpInfo << "The class " << pWhere << " supports the following methods:\nhelp\n" << m_iHelpInfo;
-    defineConstant ("help", iHelpInfo);
+    return defineConstant ("help", iHelpInfo);
+    */
+    return true;
 }
 
 /*******************************
