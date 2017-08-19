@@ -109,6 +109,7 @@ namespace Vxa {
     //  State
     private:
 	VClass& m_rClass;
+	VString m_iHelpInfo;
     };
 }
 

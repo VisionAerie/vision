@@ -56,6 +56,18 @@ namespace Vxa {
 
 	typedef typename importable_t::scalar_return_t scalar_return_t;
 
+    //  Class Builder
+    private:
+	class CBuilder : public T::ClassBuilder {
+	public:
+	    typedef typename T::ClassBuilder base_t;
+	public:
+	    CBuilder (VClass &rClass) : base_t (rClass) {
+		base_t::defineConstant ("rttiName", collectable_t::RTTIName ());
+		base_t::defineHelp (collectable_t::RTTIName ());
+	    }
+	};
+
     //  Datum
     public:
 	class Datum : public VExportableDatum_<VClass> {
@@ -88,13 +100,6 @@ namespace Vxa {
     //  Construction
     public:
 	VCollectable () {
-	    /*
-	    V::VRTTI iRTTI (typeid(*this)); {
-		VString iClassID (iRTTI.name ());
-		BaseClass::setIdentificationTo (iClassID);
-	    }
-	    defineConstant ("rttiName", iRTTI.name ());
-	    */
 	}
 
     //  Destruction
@@ -102,10 +107,21 @@ namespace Vxa {
 	~VCollectable () {
 	}
 
+    //  RTTI Info
+    public:
+	static V::VRTTI RTTI () {
+	    static V::VRTTI iRTTI (typeid (T));
+	    return iRTTI;
+	}
+	static VString RTTIName () {
+	    static VString iRTTIName (RTTI ().name ());
+	    return iRTTIName;
+	}
+
     //  Class Materialization
     public:
 	VClass *thisAsClass () {
-	    static typename T::ClassBuilder gs_iClassBuilder (*this);
+	    static CBuilder iBuilder (*this);
 	    return this;
 	}
 

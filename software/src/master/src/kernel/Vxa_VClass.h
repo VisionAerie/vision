@@ -56,7 +56,6 @@ namespace Vxa {
     //  Method Definition
     public:
 	bool defineMethod (VMethod *pMethod);
-	bool defineHelp (char const *pWhere);
 
     //  Method Execution
     public:
@@ -72,8 +71,6 @@ namespace Vxa {
 	unsigned __int64 m_cInstancesReported;
 	unsigned __int64 m_cInstancesReleased;
 	VString m_iIdentification;
-    protected:
-	VString m_iHelpInfo;
     };
 } //  namespace Vxa
 

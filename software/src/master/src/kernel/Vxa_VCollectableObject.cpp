@@ -86,10 +86,14 @@ Vxa::VCollectableObject::ClassBuilder::ClassBuilder (Vxa::VClass &rClass) : m_rC
 }
 
 bool Vxa::VCollectableObject::ClassBuilder::defineMethod (VMethod *pMethod) {
+    m_iHelpInfo << pMethod->name () << "\n";
+
     return m_rClass.defineMethod (pMethod);
 }
 
 bool Vxa::VCollectableObject::ClassBuilder::defineHelp (VString const &rWhere) {
-    return true;
+    VString iHelpInfo;
+    iHelpInfo << "The class " << rWhere << " supports the following methods:\nhelp\n" << m_iHelpInfo;
+    return defineConstant ("help", iHelpInfo);
 }
 
