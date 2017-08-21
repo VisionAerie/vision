@@ -62,7 +62,7 @@ namespace Vxa {
 	public:
 	    typedef typename T::ClassBuilder base_t;
 	public:
-	    CBuilder (VClass &rClass) : base_t (rClass) {
+	    CBuilder (VClass *pClass) : base_t (pClass) {
 		base_t::defineConstant ("rttiName", collectable_t::RTTIName ());
 		base_t::defineHelp (collectable_t::RTTIName ());
 	    }
@@ -121,7 +121,7 @@ namespace Vxa {
     //  Class Materialization
     public:
 	VClass *thisAsClass () {
-	    static CBuilder iBuilder (*this);
+	    static CBuilder iBuilder (this);
 	    return this;
 	}
 

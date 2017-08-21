@@ -93,7 +93,7 @@ void VA::PugiXML::Attribute::getPreviousSibling (Vxa::VResultBuilder &rRB) {
  ***************************
  ***************************/
 
-VA::PugiXML::Attribute::ClassBuilder::ClassBuilder (Vxa::VClass &rClass) : Object::ClassBuilder (rClass) {
+VA::PugiXML::Attribute::ClassBuilder::ClassBuilder (Vxa::VClass *pClass) : Object::ClassBuilder (pClass) {
     defineMethod ("getName", &Attribute::getName);
     defineMethod ("getValue", &Attribute::getValue);
 

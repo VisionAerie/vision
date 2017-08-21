@@ -76,7 +76,7 @@ void VA::PugiXML::Root::loadDocument (Vxa::VResultBuilder &rRB, VString const &r
  ***************************
  ***************************/
 
-VA::PugiXML::Root::ClassBuilder::ClassBuilder (Vxa::VClass &rClass) : Object::ClassBuilder (rClass) {
+VA::PugiXML::Root::ClassBuilder::ClassBuilder (Vxa::VClass *pClass) : Object::ClassBuilder (pClass) {
     defineMethod ("load:", &Root::loadDocument);
 }
 

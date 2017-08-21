@@ -82,13 +82,13 @@ bool Vxa::VCollectableObject::detach (VCollectableCollection *pCollection) {
  **************************
  **************************/
 
-Vxa::VCollectableObject::ClassBuilder::ClassBuilder (Vxa::VClass &rClass) : m_rClass (rClass) {
+Vxa::VCollectableObject::ClassBuilder::ClassBuilder (Vxa::VClass *pClass) : m_pClass (pClass) {
 }
 
 bool Vxa::VCollectableObject::ClassBuilder::defineMethod (VMethod *pMethod) {
     m_iHelpInfo << pMethod->name () << "\n";
 
-    return m_rClass.defineMethod (pMethod);
+    return m_pClass->defineMethod (pMethod);
 }
 
 bool Vxa::VCollectableObject::ClassBuilder::defineHelp (VString const &rWhere) {

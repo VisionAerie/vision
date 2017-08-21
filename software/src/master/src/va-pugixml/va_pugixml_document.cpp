@@ -91,7 +91,7 @@ void VA::PugiXML::Document::getParseDescription (Vxa::VResultBuilder &rRB) {
  ***************************
  ***************************/
 
-VA::PugiXML::Document::ClassBuilder::ClassBuilder (Vxa::VClass &rClass) : Node::ClassBuilder (rClass) {
+VA::PugiXML::Document::ClassBuilder::ClassBuilder (Vxa::VClass *pClass) : Node::ClassBuilder (pClass) {
     defineMethod ("parsedOK", &Document::getParsedOK);
     defineMethod ("parseStatus", &Document::getParseStatus);
     defineMethod ("parseDescription", &Document::getParseDescription);

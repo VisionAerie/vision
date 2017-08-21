@@ -29,8 +29,8 @@ namespace VA {
 	//  Class Builder
 	public:
 	    class ClassBuilder : public Object::ClassBuilder {
-	    public:
-		ClassBuilder (Vxa::VClass &rClass);
+	    protected:
+		ClassBuilder (Vxa::VClass *pClass);
 	    };
 
 	//  Construction

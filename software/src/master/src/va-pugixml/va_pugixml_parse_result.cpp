@@ -59,7 +59,7 @@ VA::PugiXML::ParseResult::ParseResult () {
  ************************************
  ************************************/
 
-VA::PugiXML::ParseResult::ClassBuilder::ClassBuilder (Vxa::VClass &rClass) : Object::ClassBuilder (rClass) {
+VA::PugiXML::ParseResult::ClassBuilder::ClassBuilder (Vxa::VClass *pClass) : Object::ClassBuilder (pClass) {
 }
 
 namespace {

@@ -202,7 +202,7 @@ void VA::PugiXML::Node::getLastAttribute (Vxa::VResultBuilder &rRB) {
  ***************************
  ***************************/
 
-VA::PugiXML::Node::ClassBuilder::ClassBuilder (Vxa::VClass &rClass) : Object::ClassBuilder (rClass) {
+VA::PugiXML::Node::ClassBuilder::ClassBuilder (Vxa::VClass *pClass) : Object::ClassBuilder (pClass) {
     defineMethod ("isEmpty", &Node::getIsEmpty);
 
     defineMethod ("attributeCount", &Node::getAttributeCount);

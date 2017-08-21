@@ -76,8 +76,8 @@ namespace Vxa {
 
     class Vxa_API VCollectableObject::ClassBuilder {
     //  Construction
-    public:
-	ClassBuilder (Vxa::VClass &rClass);
+    protected:
+	ClassBuilder (Vxa::VClass *pClass);
 
     //  Method Definition
     public:
@@ -108,7 +108,7 @@ namespace Vxa {
 
     //  State
     private:
-	VClass& m_rClass;
+	VClass* m_pClass;
 	VString m_iHelpInfo;
     };
 }
