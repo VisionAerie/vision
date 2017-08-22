@@ -38,9 +38,11 @@
     template class Vxa_API T
 
 namespace Vxa {
-    class VCollectableObject;
-
-    template <typename T> class VCollectable : public VClass, public VExportable<T*> , public VImportable<T*> {
+    template <typename T> class VCollectable
+	: public VClass
+	, public VExportable<T*>
+	, public VImportable<T*>
+    {
 	DECLARE_FAMILY_MEMBERS (VCollectable<T>,VClass);
 
     //  Aliases

@@ -96,4 +96,3 @@ bool Vxa::VCollectableObject::ClassBuilder::defineHelp (VString const &rWhere) {
     iHelpInfo << "The class " << rWhere << " supports the following methods:\nhelp\n" << m_iHelpInfo;
     return defineConstant ("help", iHelpInfo);
 }
-

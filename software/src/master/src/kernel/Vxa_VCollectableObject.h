@@ -70,7 +70,7 @@ namespace Vxa {
 	VCollectableCollection::Pointer m_pCollection;
 	collection_index_t m_xObject;
     };
-    
+
 /*****************************************************************
  *****************************************************************/
 
