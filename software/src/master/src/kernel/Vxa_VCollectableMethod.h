@@ -74,7 +74,7 @@ namespace Vxa {
 
     //  Construction
     protected:
-	template<typename NameType> VCollectableMethodBase (NameType rName) : BaseClass (rName) {
+	VCollectableMethodBase (VString const &rName) : BaseClass (rName) {
 	}
 
     //  Destruction
@@ -179,7 +179,7 @@ namespace Vxa {
 	    typename VImportable<P16>::Instance m_iP16;
 	};
     public:
-	template <typename NameType> VCollectableMethod (NameType rName, member_t pMember) : base_t (rName), m_pMember (pMember) {
+	VCollectableMethod (VString const &rName, member_t pMember) : base_t (rName), m_pMember (pMember) {
 	}
     protected:
 	~VCollectableMethod () {
@@ -298,7 +298,7 @@ namespace Vxa {
 	    typename VImportable<P15>::Instance m_iP15;
 	};
     public:
-	template <typename NameType> VCollectableMethod (NameType rName, member_t pMember) : base_t (rName), m_pMember (pMember) {
+	VCollectableMethod (VString const &rName, member_t pMember) : base_t (rName), m_pMember (pMember) {
 	}
     protected:
 	~VCollectableMethod () {
@@ -412,7 +412,7 @@ namespace Vxa {
 	    typename VImportable<P14>::Instance m_iP14;
 	};
     public:
-	template <typename NameType> VCollectableMethod (NameType rName, member_t pMember) : base_t (rName), m_pMember (pMember) {
+	VCollectableMethod (VString const &rName, member_t pMember) : base_t (rName), m_pMember (pMember) {
 	}
     protected:
 	~VCollectableMethod () {
@@ -524,7 +524,7 @@ namespace Vxa {
 	    typename VImportable<P13>::Instance m_iP13;
 	};
     public:
-	template <typename NameType> VCollectableMethod (NameType rName, member_t pMember) : base_t (rName), m_pMember (pMember) {
+	VCollectableMethod (VString const &rName, member_t pMember) : base_t (rName), m_pMember (pMember) {
 	}
     protected:
 	~VCollectableMethod () {
@@ -632,7 +632,7 @@ namespace Vxa {
 	    typename VImportable<P12>::Instance m_iP12;
 	};
     public:
-	template <typename NameType> VCollectableMethod (NameType rName, member_t pMember) : base_t (rName), m_pMember (pMember) {
+	VCollectableMethod (VString const &rName, member_t pMember) : base_t (rName), m_pMember (pMember) {
 	}
     protected:
 	~VCollectableMethod () {
@@ -737,7 +737,7 @@ namespace Vxa {
 	    typename VImportable<P11>::Instance m_iP11;
 	};
     public:
-	template <typename NameType> VCollectableMethod (NameType rName, member_t pMember) : base_t (rName), m_pMember (pMember) {
+	VCollectableMethod (VString const &rName, member_t pMember) : base_t (rName), m_pMember (pMember) {
 	}
     protected:
 	~VCollectableMethod () {
@@ -840,7 +840,7 @@ namespace Vxa {
 	    typename VImportable<P10>::Instance m_iP10;
 	};
     public:
-	template <typename NameType> VCollectableMethod (NameType rName, member_t pMember) : base_t (rName), m_pMember (pMember) {
+	VCollectableMethod (VString const &rName, member_t pMember) : base_t (rName), m_pMember (pMember) {
 	}
     protected:
 	~VCollectableMethod () {
@@ -940,7 +940,7 @@ namespace Vxa {
 	    typename VImportable<P9>::Instance m_iP9;
 	};
     public:
-	template <typename NameType> VCollectableMethod (NameType rName, member_t pMember) : base_t (rName), m_pMember (pMember) {
+	VCollectableMethod (VString const &rName, member_t pMember) : base_t (rName), m_pMember (pMember) {
 	}
     protected:
 	~VCollectableMethod () {
@@ -1035,7 +1035,7 @@ namespace Vxa {
 	    typename VImportable<P8>::Instance m_iP8;
 	};
     public:
-	template <typename NameType> VCollectableMethod (NameType rName, member_t pMember) : base_t (rName), m_pMember (pMember) {
+	VCollectableMethod (VString const &rName, member_t pMember) : base_t (rName), m_pMember (pMember) {
 	}
     protected:
 	~VCollectableMethod () {
@@ -1127,7 +1127,7 @@ namespace Vxa {
 	    typename VImportable<P7>::Instance m_iP7;
 	};
     public:
-	template <typename NameType> VCollectableMethod (NameType rName, member_t pMember) : base_t (rName), m_pMember (pMember) {
+	VCollectableMethod (VString const &rName, member_t pMember) : base_t (rName), m_pMember (pMember) {
 	}
     protected:
 	~VCollectableMethod () {
@@ -1217,7 +1217,7 @@ namespace Vxa {
 	    typename VImportable<P6>::Instance m_iP6;
 	};
     public:
-	template <typename NameType> VCollectableMethod (NameType rName, member_t pMember) : base_t (rName), m_pMember (pMember) {
+	VCollectableMethod (VString const &rName, member_t pMember) : base_t (rName), m_pMember (pMember) {
 	}
     protected:
 	~VCollectableMethod () {
@@ -1305,7 +1305,7 @@ namespace Vxa {
 	    typename VImportable<P5>::Instance m_iP5;
 	};
     public:
-	template <typename NameType> VCollectableMethod (NameType rName, member_t pMember) : base_t (rName), m_pMember (pMember) {
+	VCollectableMethod (VString const &rName, member_t pMember) : base_t (rName), m_pMember (pMember) {
 	}
     protected:
 	~VCollectableMethod () {
@@ -1391,7 +1391,7 @@ namespace Vxa {
 	    typename VImportable<P4>::Instance m_iP4;
 	};
     public:
-	template <typename NameType> VCollectableMethod (NameType rName, member_t pMember) : base_t (rName), m_pMember (pMember) {
+	VCollectableMethod (VString const &rName, member_t pMember) : base_t (rName), m_pMember (pMember) {
 	}
     protected:
 	~VCollectableMethod () {
@@ -1474,7 +1474,7 @@ namespace Vxa {
 	    typename VImportable<P3>::Instance m_iP3;
 	};
     public:
-	template <typename NameType> VCollectableMethod (NameType rName, member_t pMember) : base_t (rName), m_pMember (pMember) {
+	VCollectableMethod (VString const &rName, member_t pMember) : base_t (rName), m_pMember (pMember) {
 	}
     protected:
 	~VCollectableMethod () {
@@ -1553,7 +1553,7 @@ namespace Vxa {
 	    typename VImportable<P2>::Instance m_iP2;
 	};
     public:
-	template <typename NameType> VCollectableMethod (NameType rName, member_t pMember) : base_t (rName), m_pMember (pMember) {
+	VCollectableMethod (VString const &rName, member_t pMember) : base_t (rName), m_pMember (pMember) {
 	}
     protected:
 	~VCollectableMethod () {
@@ -1630,7 +1630,7 @@ namespace Vxa {
 	    typename VImportable<P1>::Instance m_iP1;
 	};
     public:
-	template <typename NameType> VCollectableMethod (NameType rName, member_t pMember) : base_t (rName), m_pMember (pMember) {
+	VCollectableMethod (VString const &rName, member_t pMember) : base_t (rName), m_pMember (pMember) {
 	}
     protected:
 	~VCollectableMethod () {
@@ -1695,7 +1695,7 @@ namespace Vxa {
 	    typename method_t::Reference const m_pMethod;
 	};
     public:
-	template <typename NameType> VCollectableMethod (NameType rName, member_t pMember) : base_t (rName), m_pMember (pMember) {
+	VCollectableMethod (VString const &rName, member_t pMember) : base_t (rName), m_pMember (pMember) {
 	}
     protected:
 	~VCollectableMethod () {
@@ -1736,7 +1736,7 @@ namespace Vxa {
     public:
 	typedef VCollectableMethod<T,P1,P2,P3,P4,P5,P6,P7,P8,P9,P10,P11,P12,P13,P14,P15,P16> base_t;
 	typedef typename base_t::member_t member_t;
-	template <typename NameType> VCollectableMethod (NameType rName, member_t pMember) : base_t (rName, pMember) {
+	VCollectableMethod (VString const &rName, member_t pMember) : base_t (rName, pMember) {
 	}
     };
 
@@ -1752,7 +1752,7 @@ namespace Vxa {
     public:
 	typedef VCollectableMethod<T,P1,P2,P3,P4,P5,P6,P7,P8,P9,P10,P11,P12,P13,P14,P15> base_t;
 	typedef typename base_t::member_t member_t;
-	template <typename NameType> VCollectableMethod (NameType rName, member_t pMember) : base_t (rName, pMember) {
+	VCollectableMethod (VString const &rName, member_t pMember) : base_t (rName, pMember) {
 	}
     };
 
@@ -1768,7 +1768,7 @@ namespace Vxa {
     public:
 	typedef VCollectableMethod<T,P1,P2,P3,P4,P5,P6,P7,P8,P9,P10,P11,P12,P13,P14> base_t;
 	typedef typename base_t::member_t member_t;
-	template <typename NameType> VCollectableMethod (NameType rName, member_t pMember) : base_t (rName, pMember) {
+	VCollectableMethod (VString const &rName, member_t pMember) : base_t (rName, pMember) {
 	}
     };
 
@@ -1784,7 +1784,7 @@ namespace Vxa {
     public:
 	typedef VCollectableMethod<T,P1,P2,P3,P4,P5,P6,P7,P8,P9,P10,P11,P12,P13> base_t;
 	typedef typename base_t::member_t member_t;
-	template <typename NameType> VCollectableMethod (NameType rName, member_t pMember) : base_t (rName, pMember) {
+	VCollectableMethod (VString const &rName, member_t pMember) : base_t (rName, pMember) {
 	}
     };
 
@@ -1799,7 +1799,7 @@ namespace Vxa {
     public:
 	typedef VCollectableMethod<T,P1,P2,P3,P4,P5,P6,P7,P8,P9,P10,P11,P12> base_t;
 	typedef typename base_t::member_t member_t;
-	template <typename NameType> VCollectableMethod (NameType rName, member_t pMember) : base_t (rName, pMember) {
+	VCollectableMethod (VString const &rName, member_t pMember) : base_t (rName, pMember) {
 	}
     };
 
@@ -1814,7 +1814,7 @@ namespace Vxa {
     public:
 	typedef VCollectableMethod<T,P1,P2,P3,P4,P5,P6,P7,P8,P9,P10,P11> base_t;
 	typedef typename base_t::member_t member_t;
-	template <typename NameType> VCollectableMethod (NameType rName, member_t pMember) : base_t (rName, pMember) {
+	VCollectableMethod (VString const &rName, member_t pMember) : base_t (rName, pMember) {
 	}
     };
 
@@ -1829,7 +1829,7 @@ namespace Vxa {
     public:
 	typedef VCollectableMethod<T,P1,P2,P3,P4,P5,P6,P7,P8,P9,P10> base_t;
 	typedef typename base_t::member_t member_t;
-	template <typename NameType> VCollectableMethod (NameType rName, member_t pMember) : base_t (rName, pMember) {
+	VCollectableMethod (VString const &rName, member_t pMember) : base_t (rName, pMember) {
 	}
     };
 
@@ -1844,7 +1844,7 @@ namespace Vxa {
     public:
 	typedef VCollectableMethod<T,P1,P2,P3,P4,P5,P6,P7,P8,P9> base_t;
 	typedef typename base_t::member_t member_t;
-	template <typename NameType> VCollectableMethod (NameType rName, member_t pMember) : base_t (rName, pMember) {
+	VCollectableMethod (VString const &rName, member_t pMember) : base_t (rName, pMember) {
 	}
     };
 
@@ -1858,7 +1858,7 @@ namespace Vxa {
     public:
 	typedef VCollectableMethod<T,P1,P2,P3,P4,P5,P6,P7,P8> base_t;
 	typedef typename base_t::member_t member_t;
-	template <typename NameType> VCollectableMethod (NameType rName, member_t pMember) : base_t (rName, pMember) {
+	VCollectableMethod (VString const &rName, member_t pMember) : base_t (rName, pMember) {
 	}
     };
 
@@ -1871,7 +1871,7 @@ namespace Vxa {
     public:
 	typedef VCollectableMethod<T,P1,P2,P3,P4,P5,P6,P7> base_t;
 	typedef typename base_t::member_t member_t;
-	template <typename NameType> VCollectableMethod (NameType rName, member_t pMember) : base_t (rName, pMember) {
+	VCollectableMethod (VString const &rName, member_t pMember) : base_t (rName, pMember) {
 	}
     };
 
@@ -1883,7 +1883,7 @@ namespace Vxa {
     public:
 	typedef VCollectableMethod<T,P1,P2,P3,P4,P5,P6> base_t;
 	typedef typename base_t::member_t member_t;
-	template <typename NameType> VCollectableMethod (NameType rName, member_t pMember) : base_t (rName, pMember) {
+	VCollectableMethod (VString const &rName, member_t pMember) : base_t (rName, pMember) {
 	}
     };
 
@@ -1894,7 +1894,7 @@ namespace Vxa {
     public:
 	typedef VCollectableMethod<T,P1,P2,P3,P4,P5> base_t;
 	typedef typename base_t::member_t member_t;
-	template <typename NameType> VCollectableMethod (NameType rName, member_t pMember) : base_t (rName, pMember) {
+	VCollectableMethod (VString const &rName, member_t pMember) : base_t (rName, pMember) {
 	}
     };
 
@@ -1905,7 +1905,7 @@ namespace Vxa {
     public:
 	typedef VCollectableMethod<T,P1,P2,P3,P4> base_t;
 	typedef typename base_t::member_t member_t;
-	template <typename NameType> VCollectableMethod (NameType rName, member_t pMember) : base_t (rName, pMember) {
+	VCollectableMethod (VString const &rName, member_t pMember) : base_t (rName, pMember) {
 	}
     };
 
@@ -1916,7 +1916,7 @@ namespace Vxa {
     public:
 	typedef VCollectableMethod<T,P1,P2,P3> base_t;
 	typedef typename base_t::member_t member_t;
-	template <typename NameType> VCollectableMethod (NameType rName, member_t pMember) : base_t (rName, pMember) {
+	VCollectableMethod (VString const &rName, member_t pMember) : base_t (rName, pMember) {
 	}
     };
 
@@ -1927,7 +1927,7 @@ namespace Vxa {
     public:
 	typedef VCollectableMethod<T,P1,P2> base_t;
 	typedef typename base_t::member_t member_t;
-	template <typename NameType> VCollectableMethod (NameType rName, member_t pMember) : base_t (rName, pMember) {
+	VCollectableMethod (VString const &rName, member_t pMember) : base_t (rName, pMember) {
 	}
     };
 
@@ -1938,7 +1938,7 @@ namespace Vxa {
     public:
 	typedef VCollectableMethod<T,P1> base_t;
 	typedef typename base_t::member_t member_t;
-	template <typename NameType> VCollectableMethod (NameType rName, member_t pMember) : base_t (rName, pMember) {
+	VCollectableMethod (VString const &rName, member_t pMember) : base_t (rName, pMember) {
 	}
     };
 
@@ -1947,7 +1947,7 @@ namespace Vxa {
     public:
 	typedef VCollectableMethod<T> base_t;
 	typedef typename base_t::member_t member_t;
-	template <typename NameType> VCollectableMethod (NameType rName, member_t pMember) : base_t (rName, pMember) {
+	VCollectableMethod (VString const &rName, member_t pMember) : base_t (rName, pMember) {
 	}
     };
 } //  namespace Vxa
