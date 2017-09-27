@@ -3789,21 +3789,63 @@ bool M_ASD::InitializeSpaceForTransientGC (VArgList const &rArgList) {
 }
 
 
+/*********************************************************************************
+The 'Cycle Detect' (now a bit of a misnomer) phase of the garbage collector
+is responsible for estimating the minimal set of container handles that must
+be added to the garbage collector's root set in order to protect database
+structures currently in use in this process.
+
+In pre-8.1 versions of Vision, container handles were simple structures that
+always and only served as database access handles.  In that model, all handles
+were always added to the garbage collector's root set.
+
+In release 8.1, container handles became more general.  While still serving
+as access handles, they can also act as data caches, 'future's for persistable
+structures, and participants in potentially cyclic transient data structures
+of their own.  Just because a container handle exists and is attached to a
+container table entry (CTE) doesn't mean that either the associated CTE or the
+handle must be retained.  Handles may be directly or indirectly referenced from
+other handles or from elsewhere in the process. Only those handles that are (or
+might be) referenced from elsewhere must be added to the garbage collector's
+root set.
+
+To identify which container handles must be in the root set, the garbage
+collector first identifies the set of CTEs reachable from the persistent
+roots of the database.  That closure is computed on the basis of both inter-
+container (POP references) and inter-handle references.  Those CTEs NOT in
+that persistent root-set closure become candidates for the cycle-detect
+phase of the garbage collector.
+
+Trivially, the cycle-detect phase could add all container handles it finds
+in the set of CTEs not included in the persistent root set's closure.  While
+doing so is safe, it is not minimal.  To identify the CTEs associated with
+container handles referenced from elsewhere in the process, the cycle-detect
+algorithm first identifies those container handles that are ONLY referenced
+from other handles outside the persistent closure.  It does that by ONLY
+following inter-handle references to compute partial reference counts for
+each handle reached directly or indirectly.  At the end of that process,
+those handles whose partial reference count is LESS THAN their actual reference
+count MUST be considered to be referenced from elsewhere in the process. Adding
+them to the garbage collector's root set, another marking pass is run, completing
+the garbage collector's reachability phase.
+
+Note that the partial reference count computation process is allowed to miss
+references.  Doing so results in under-counting the number of intra-database
+internal references.  Under-counting is always safe; however, the cost of under-
+counting is the failure to detect and reclaim orphaned structures.
+**********************************************************************************/
 bool M_ASD::EnqueuePossibleCycles (VArgList const &rArgList) {
     unsigned int xUB = cteCount () - 1;
     for (unsigned int cti = 0; cti <= xUB; cti++) {
 	M_CTE cte (this, cti);
         if (!cte.gcVisited()) {
             cte.cdVisited(false);
-	    switch (cte.addressType ()) {
-	    case M_CTEAddressType_CPCC:
+	    if (cte.holdsACPCC ()) {
 		VContainerHandle *pHandle = cte.addressAsContainerHandle ();
-		if (cte.referenceCount() == 0 && pHandle->isReferenced())
-		{
-		    GCQueueInsert (cte.containerIndex ());
-		    cte.cdVisited(true);
-		    pHandle->generateLogRecord ("EnqueuePC");
-		}
+		GCQueueInsert (cte.containerIndex ());
+		cte.cdVisited(true);
+
+		pHandle->generateLogRecord ("EnqueuePC");
 	    }
         }
     } 
@@ -3815,20 +3857,17 @@ bool M_ASD::EnqueueOmittingCycles (VArgList const &rArgList) {
     unsigned int xUB = cteCount () - 1;
     for (unsigned int cti = 0; cti <= xUB; cti++) {
 	M_CTE cte (this, cti);
-	switch (cte.addressType ()) {
-	case M_CTEAddressType_CPCC:
+	if (cte.holdsACPCC ()) {
 	    VContainerHandle *pHandle = cte.addressAsContainerHandle ();
 	    // record the handle's status after cycle detection...
 	    cte.foundAllReferences(pHandle->foundAllReferences());
 	    if (!cte.gcVisited()) {
-		if (cte.referenceCount() == 0 && pHandle->isReferenced()) {
-		    if (cte.foundAllReferences()) {
-			pHandle->generateLogRecord ("Omit");
-		    } else {
-			GCQueueInsert (cte.containerIndex ());
-			cte.gcVisited(true);
-			pHandle->generateLogRecord ("Keep");
-		    }
+		if (cte.foundAllReferences()) {
+		    pHandle->generateLogRecord ("Omit");
+		} else {
+		    GCQueueInsert (cte.containerIndex ());
+		    cte.gcVisited(true);
+		    pHandle->generateLogRecord ("Keep");
 		}
 	    }
 	}
@@ -4236,18 +4275,9 @@ void M_ASD::GCVisitMark::Mark_(M_ASD* pASD, M_POP const *pPOP) {
 }
 
 
-/*---------------------------------------------------------------------------
- *---------------------------------------------------------------------------
- */
-void M_ASD::GCVisitBase::processContainerHandle (M_CTE &rCTE, VContainerHandle *pHandle) {
-    processContainerAddress (rCTE, pHandle->containerAddress ());
-}
-
-void M_ASD::GCVisitMark::processContainerHandle (M_CTE &rCTE, VContainerHandle *pHandle) {
-    BaseClass::processContainerHandle (rCTE, pHandle);
-    pHandle->visitReferencesUsing (&VContainerHandle::gcMark);
-}
-
+/*--------------------------------*
+ *  M_ASD::GCVisitBase
+ *--------------------------------*/
 void M_ASD::GCVisitBase::processContainerAddress (M_CTE &rCTE, M_CPreamble *pAddress) {
 /****
  *  Call the rtype handler to insert the containers it references into the
@@ -4281,11 +4311,33 @@ void M_ASD::GCVisitBase::processContainerAddress (M_CTE &rCTE, M_CPreamble *pAdd
     }
 }
 
+void M_ASD::GCVisitBase::processContainerHandle (M_CTE &rCTE, VContainerHandle *pHandle) {
+    processContainerAddress (rCTE, pHandle->containerAddress ());
+}
+
+/*--------------------------------*
+ *  M_ASD::GCVisitMark
+ *--------------------------------*/
+void M_ASD::GCVisitMark::processContainerHandle (M_CTE &rCTE, VContainerHandle *pHandle) {
+    BaseClass::processContainerHandle (rCTE, pHandle);
+    pHandle->visitReferencesUsing (this);
+}
+void M_ASD::GCVisitMark::visitHandle (VContainerHandle *pHandle) {
+    pHandle->gcMarkFor (this);
+}
+
+/*--------------------------------*
+ *  M_ASD::GCVisitCycleDetect
+ *--------------------------------*/
 void M_ASD::GCVisitCycleDetect::processContainerAddress (M_CTE &rCTE, M_CPreamble *pAddress) {
 }
 
 void M_ASD::GCVisitCycleDetect::processContainerHandle (M_CTE &rCTE, VContainerHandle *pHandle) {
-    pHandle->visitReferencesUsing (&VContainerHandle::cdMark);
+    pHandle->visitReferencesUsing (this);
+}
+
+void M_ASD::GCVisitCycleDetect::visitHandle (VContainerHandle *pHandle) {
+    pHandle->cdMarkFor (this);
 }
 
 /*---------------------------------------------------------------------------
