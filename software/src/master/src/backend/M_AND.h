@@ -76,6 +76,7 @@ class M_AND : public VDatabaseActivation {
 //  Aliases
 public:
     typedef V::VArgList VArgList;
+    typedef V::VString VString;
 
 //  GC Metrics
 public:
@@ -261,7 +262,7 @@ public:
 	return m_cActiveSpaces;
     }
 
-    VDatabase *database_() const;
+    virtual VDatabase *database_() const OVERRIDE;
 
     M_KOT *KOT () const {
 	return m_pKnownObjectTable;
@@ -421,9 +422,9 @@ public:
 	return AccessASD (M_POP_ObjectSpace (pPOP), aMissingSpaceIsAnError);
     }
 
-    M_ASD *AccessSpace (unsigned int xSpace);
-    M_ASD *AccessSpace (M_POP const *pPOP) {
-	return AccessSpace (M_POP_ObjectSpace (pPOP));
+    bool AccessSpace (M_ASD *&rpResult, unsigned int xSpace);
+    bool AccessSpace (M_ASD *&rpResult, M_POP const *pPOP) {
+	return AccessSpace (rpResult, M_POP_ObjectSpace (pPOP));
     }
 
     M_ASD *AccessSpace (unsigned int xSpace, bool *pfSpaceValid);
@@ -684,18 +685,18 @@ public:
 
 //  Resource Utilization Query
 public:
-    void AccumulateAllocationStatistics (
+    virtual void AccumulateAllocationStatistics (
 	unsigned __int64 *pAllocationTotal, unsigned __int64 *pMappingTotal
-    ) const;
+    ) const OVERRIDE;
 
 //  Resource Utilization Management
 public:
-    void FlushCachedResources ();
+    virtual void FlushCachedResources () OVERRIDE;
 
-    unsigned int ReclaimSegments () {
+    virtual unsigned int ReclaimSegments () OVERRIDE {
 	return m_pPhysicalAND->ReclaimSegments ();
     }
-    unsigned int ReclaimAllSegments () {
+    virtual unsigned int ReclaimAllSegments () OVERRIDE {
 	return m_pPhysicalAND->ReclaimAllSegments ();
     }
 
